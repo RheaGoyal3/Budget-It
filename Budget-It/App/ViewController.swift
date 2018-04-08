@@ -34,84 +34,109 @@ class ViewController: UIViewController {
             print("Wrong Input");
         }
     }
+    
+    
     //alert dialogue
     func show(opt: Int) {
     let foodAlert = UIAlertController(title: "Would you like to view or add an expense?", message:nil, preferredStyle: .alert)
         
         foodAlert.addAction(UIAlertAction(title: "View",style: .default,handler: { (action: UIAlertAction!) in
+            var a: String;
+            a = "Total Money Spent On "
+            
+            //checks which option was selected
             switch opt{
+                
                 //case for food
             case 1:
-                let food = UIAlertController(title: "Total expense on food: ", message: nil, preferredStyle: .alert)
-                food.addAction(UIAlertAction(title: "Done",style: .default,handler:nil))
-                self.present(food, animated:true)
+                let xNSNumber = self.totalFood as NSNumber
+                let xString : String = xNSNumber.stringValue
+                a = a + "Food: $" + xString
                 
                 //case for travel
             case 2:
-                let travel = UIAlertController(title: "Total expense on travel", message:nil, preferredStyle: .alert)
-                travel.addAction(UIAlertAction(title: "Done",style: .default,handler:nil))
-                self.present(travel, animated:true)
+                let xNSNumber = self.totalTravel as NSNumber
+                let xString : String = xNSNumber.stringValue
+                a = a + "Travel: $" + xString
+                
                 
                 //case for entertainment
             case 3:
-                let enter = UIAlertController(title: "Total expense on entertainment", message:nil, preferredStyle: .alert)
-                enter.addAction(UIAlertAction(title: "Done",style: .default,handler:nil))
-                self.present(enter, animated:true)
+                let xNSNumber = self.totalEnt as NSNumber
+                let xString : String = xNSNumber.stringValue
+                a = a + "Entertainment: $" + xString
+                
                 
                 //case for misc
             case 4:
-                let misc = UIAlertController(title: "Miscellaneous Expense: ", message:nil, preferredStyle: .alert)
-                misc.addAction(UIAlertAction(title: "Done",style: .default,handler:nil))
-                self.present(misc, animated:true)
-                
+                let xNSNumber = self.totalMisc as NSNumber
+                let xString : String = xNSNumber.stringValue
+                a = "Miscellaneous Expense: $" + xString
+             
                 //error case
             default:
                 let error = UIAlertController(title: "Error has occured", message:nil, preferredStyle: .alert)
                 error.addAction(UIAlertAction(title: "Done",style: .default,handler:nil))
                 self.present(error, animated: true)
-            }
+            }//switch ends
+            
+            //printing alert dialog to view expenses
+            let viewExp = UIAlertController(title: a, message: nil, preferredStyle: .alert)
+            viewExp.addAction(UIAlertAction(title: "Done",style: .default,handler:nil))
+            self.present(viewExp, animated:true)
          
             
         }))
         
+        //add amount spent
         foodAlert.addAction(UIAlertAction(title: "Add",style: .default,handler: { (action: UIAlertAction!) in
+            
             let add = UIAlertController(title: "How much did you spend?", message: nil, preferredStyle: .alert)
+            add.addTextField(configurationHandler: { textField in
+                textField.placeholder = "Add your value in $$ to the nearest dollar"
+            })
+            
             add.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             
-            add.addTextField(configurationHandler: { textField in
-                textField.placeholder = "Add your value in $$"
-            })
-            self.present(add, animated:true)
+            add.addAction(UIAlertAction(title: "Done", style: .default, handler: { (action: UIAlertAction!) in
+                //get input as string and convert to int
+                var exp: String
+                exp = add.textFields![0].text!;
+                let e = (exp as NSString).integerValue
+                
+                
+                switch opt{
+                //case for food
+                case 1:
+                    self.totalFood +=  e
+                //case for travel
+                case 2:
+                    self.totalTravel +=  e
+                //case for entertainment
+                case 3:
+                    self.totalEnt +=  e
+                //case for misc
+                case 4:
+                    self.totalMisc +=  e
+                    
+                //error case
+                default:
+                    let error = UIAlertController(title: "Error has occured", message:nil, preferredStyle: .alert)
+                    error.addAction(UIAlertAction(title: "Done",style: .default,handler:nil))
+                    self.present(error, animated: true)
+                    
+                }//switch ends
+                
+            })) //done field
             
-            switch opt{
-            //case for food
-            case 1:
-                self.totalFood +=  1
-                print(self.totalFood)
-                
-            //case for travel
-            case 2:
-                self.totalTravel+=1
-                
-            //case for entertainment
-            case 3:
-                self.totalEnt+=1
-                
-            //case for misc
-            case 4:
-                self.totalMisc+=1
-            //error case
-            default:
-                let error = UIAlertController(title: "Error has occured", message:nil, preferredStyle: .alert)
-                error.addAction(UIAlertAction(title: "Done",style: .default,handler:nil))
-                self.present(error, animated: true)
-                
-                
-            }//switch ends
+            
+            //displaying the add alert
+            self.present(add, animated:true)
             
             
         }))
         
+        //displays alert dialog: view or add
     self.present(foodAlert, animated:true)
     }
     
